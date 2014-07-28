@@ -8,6 +8,7 @@
  */
 #include <cstdio>
 #include <cstdlib>
+#include <time.h>
 
 #define FORab(i,a,b) for(int i = (a); i < (b); i++)
 #define FORn(i,n) FORab(i,0,n)
@@ -57,13 +58,6 @@ class SparseTable {
         M[i][j] = (A[p] < A[q]) ? p : q;
       }
     }
-
-    printf("M is %dx%d\n", logmax, max);
-    for(int i = 0; i < logmax; i++) {
-      for(int j = 0; j < max; j++)
-        printf("%3d ", A[M[i][j]]);
-      printf("\n");
-    }
   }
 
   // Assuming i <= j and i,j are in range
@@ -99,30 +93,48 @@ class SparseTable {
   }
 };
 
-int rmq(int* a, int i, int j) {
-  int mi = i;
-  for(i++; i <= j; i++)
-    if(a[i] < a[mi])
-      mi = i;
-  return mi;
-}
+int main(int argc, char **argv) {
+    int count = atoi(argv[1]);
+    clock_t start;
+    double time = 0;
+    FILE *list_file = fopen("list", "r");
+    int *a = new int[count];
+    int x;
+    int i, j;
+    for(i = 0; i < count; i++)
+        fscanf(list_file, "%d", &a[i]);
+    fclose(list_file);
 
-int main() {
-  int a[] = {7, 5, 9, 4, 8, 3, 6, 2, 1};
-  int count = sizeof(a) / sizeof(int);
+    SparseTable<int> t(a, count);
 
-  SparseTable<int> t(a, count);
+    FILE *result_file = fopen("sparse_table_results", "w");
 
-  for(int i = 0; i < count; i++) {
-    for(int j = i; j < count; j++) {
-      int x = t.rmq(i,j), y = rmq(a,i,j);
-      if(x != y) {
-        for(int k = i; k <= j; k++)
-          printf("%d ", a[k]);
-        printf("\n");
-        printf("i = %d j = %d t.rmq = %d rmq = %d\n", i, j, a[x], a[y]);
-      }
+    FILE *query_file = fopen("queries", "r");
+
+    while(fscanf(query_file, "%d %d\n", &i, &j) == 2) {
+        start = clock();
+        x = t.rmq(i,j);
+        time += (double)(clock() - start) / (CLOCKS_PER_SEC/1000);
+        fprintf(result_file, "%d\n", x);
     }
-  }
+
+    fclose(query_file);
+
+    fclose(result_file);
+    printf("Sparse Table results:\n");
+    printf("Average time taken: %f\n", time/count);
+    printf("Total time taken: %f\n", time);
+    FILE *process_file = fopen("/proc/self/statm", "r");
+    unsigned long size, resident, share, text, lib, data, dt;
+    if (fscanf(process_file, "%lu %lu %lu %lu %lu %lu %lu", &size, &resident, &share, &text, &lib, &data, &dt) == 7) {
+        printf("Total Size:     %lu\n", size);
+        printf("Resident Size:  %lu\n", resident);
+        printf("Shared Memory:  %lu\n", share);
+        printf("Code Size:      %lu\n", text);
+        printf("Library Memory: %lu\n", lib);
+        printf("Data Size:      %lu\n", data);
+        printf("Dirty Pages:    %lu\n", dt);
+    }
+    fclose(process_file);
 }
 

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+make
+
+./generate_list $1
+./segment_tree $1
+./sparse_table $1
+./check_minimum $1
+
+rm list queries answers segment_tree_results sparse_table_results
+
+make clean

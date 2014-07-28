@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+import random
+import sys
+
+count = int(sys.argv[1])
+
+data = [random.randint(-2147483648, 2147483647) for _ in range(count)]
+
+with open('list', 'w') as f:
+    f.write(" ".join([str(num) for num in data]) + "\n")
+
+with open('queries', 'w') as f1:
+    with open('answers', 'w') as f2:
+        for _ in range(10000):
+            start = random.randint(0, count - 1)
+            end = random.randint(start, count - 1)
+            f1.write("%d %d\n" % (start, end))
+            f2.write("%d %d %d\n" % (start, end, min(data[start:end + 1])))

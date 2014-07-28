@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import sys
+
+count = sys.argv[1]
+
+with open("list", "r") as f:
+    data = [int(w) for w in f.read().split()]
+
+with open('segment_tree_results', 'r') as tree_file:
+    with open('sparse_table_results', 'r') as table_file:
+        with open('answers', 'r') as answers_file:
+            for (tree_result, table_result, answer) in zip(tree_file, table_file, answers_file):
+                tree_x = data[int(tree_result)]
+                table_x = data[int(table_result)]
+                parts = [int(w) for w in answer.split()]
+                i = parts[0]
+                j = parts[1]
+                correct = parts[2]
+                if tree_x != correct:
+                    print "Error for segment tree at position (%d, %d): Expected %d, received %d" % (i, j, correct, tree_x)
+                if table_x != correct:
+                    print "Error for sparse table at position (%d, %d): Expected %d, received %d" % (i, j, correct, table_x)
