@@ -1,15 +1,3 @@
-/*
- * Sparse Table
- *
- * Performs range minimum queries in constant time
- * nlogn building time
- *
- * Author: Shrey Banga
- */
-#include <cstdio>
-#include <cstdlib>
-#include <time.h>
-
 #define FORab(i,a,b) for(int i = (a); i < (b); i++)
 #define FORn(i,n) FORab(i,0,n)
 
@@ -92,40 +80,3 @@ class SparseTable {
     return *this;
   }
 };
-
-int main(int argc, char **argv) {
-    int count = atoi(argv[1]);
-    clock_t start;
-    double time = 0;
-    FILE *list_file = fopen("list", "r");
-    int *a = new int[count];
-    int x;
-    int i, j;
-    for(i = 0; i < count; i++)
-        fscanf(list_file, "%d", &a[i]);
-    fclose(list_file);
-
-    SparseTable<int> t(a, count);
-
-    FILE *result_file = fopen("sparse_table_results", "w");
-
-    FILE *query_file = fopen("queries", "r");
-
-    while(fscanf(query_file, "%d %d\n", &i, &j) == 2) {
-        start = clock();
-        x = t.rmq(i,j);
-        time += (double)(clock() - start) / (CLOCKS_PER_SEC/1000);
-        fprintf(result_file, "%d\n", x);
-    }
-
-    fclose(query_file);
-
-    fclose(result_file);
-    FILE *process_file = fopen("/proc/self/statm", "r");
-    unsigned long size, resident, share, text, lib, data, dt;
-    if (fscanf(process_file, "%lu %lu %lu %lu %lu %lu %lu", &size, &resident, &share, &text, &lib, &data, &dt) == 7) {
-        printf("%f,%lu,%lu\n", time, size, data);
-    }
-    fclose(process_file);
-}
-
