@@ -5,11 +5,14 @@ import sys
 
 count = int(sys.argv[1])
 
+# Generate list
 data = [random.randint(-2147483648, 2147483647) for _ in range(count)]
 
+# Write list to file
 with open('list', 'w') as f:
     f.write(" ".join([str(num) for num in data]) + "\n")
 
+# Produce 10000 queries and write results to file
 with open('queries', 'w') as f1:
     with open('answers', 'w') as f2:
         for _ in range(10000):

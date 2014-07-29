@@ -4,9 +4,11 @@ import sys
 
 count = sys.argv[1]
 
+# Read in data
 with open("list", "r") as f:
     data = [int(w) for w in f.read().split()]
 
+# Check if answers match correct answers
 with open('segment_tree_results', 'r') as tree_file:
     with open('sparse_table_results', 'r') as table_file:
         with open('answers', 'r') as answers_file:

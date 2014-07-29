@@ -1,4 +1,8 @@
 #!/bin/bash
+# Gathers profile data.
+# Usage: './profile x'
+# x (integer): The size of the lists to generate
+# Example command: './profile 10000'
 
 make profile
 

@@ -4,11 +4,13 @@ import itertools
 import numpy
 import matplotlib.pyplot as plot
 
+# Problem sizes
 sizes = [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000,
         55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000]
 
 results = {'segment_tree' : {'time' : [], 'size' : [], 'data' : []}, 'sparse_table' : {'time' : [], 'size' : [], 'data' : []}}
 
+# Read in performance stats from file
 for (structure, size) in itertools.product(results.keys(), sizes):
     with open(structure + "_" + str(size)) as data_file:
         time = []
@@ -23,6 +25,7 @@ for (structure, size) in itertools.product(results.keys(), sizes):
         results[structure]['size'].append(numpy.mean(size))
         results[structure]['data'].append(numpy.mean(data))
 
+# Plot results
 plot.figure()
 plot.plot(sizes, results['segment_tree']['time'], 'r', label='Segment Tree')
 plot.plot(sizes, results['sparse_table']['time'], 'b', label='Sparse Table')
